@@ -646,7 +646,7 @@ main{transition:margin-left .25s ease,width .25s ease}
 .set-av-btns{display:flex;gap:8px;flex-wrap:wrap}
 .set-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .set-grid label,.set-fb{display:grid;gap:6px;font-weight:700;font-size:13px}
-.set-grid input,.set-fb textarea,#remtime{border:1px solid var(--border);border-radius:11px;background:#fff;padding:0 12px;height:42px;font:inherit;font-weight:500;min-width:0}
+.set-grid input,.set-fb textarea{border:1px solid var(--border);border-radius:11px;background:#fff;padding:0 12px;height:42px;font:inherit;font-weight:500;min-width:0}
 .set-fb textarea{height:auto;padding:10px 12px;resize:vertical}
 .set-line{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-top:1px solid #f6ead0}
 .set-line:first-of-type{border-top:0}
@@ -1333,13 +1333,8 @@ document.addEventListener("click", e => {
     case "settgl": {
       const k = t.dataset.k;
       if (k === "motion") { S.set.motion = !S.set.motion; applySettings(); save(); render(); break; }
-      const on = !S.set.rem[k]; S.set.rem[k] = on; save(); render();
-      if (on && notifOK() && Notification.permission === "default") { try { Notification.requestPermission().then(() => { render(); if (Notification.permission !== "granted") dlg({ icon: "bell", title: "Chưa bật được thông báo trình duyệt", msg: "Lời nhắc vẫn hoạt động: nó sẽ hiện thành cửa sổ nhắc ngay trong web khi bạn đang mở trang.", cancel: false, ok: "Đã hiểu" }); }); } catch (e) { } }
-      else if (on) toast("Đã bật lời nhắc");
       break;
     }
-    case "remday": { const d = +t.dataset.d, a = S.set.rem.days, i = a.indexOf(d); if (i >= 0) { if (a.length === 1) { toast("Cần chọn ít nhất 1 ngày"); break; } a.splice(i, 1); } else a.push(d); save(); render(); break; }
-    case "remtest": notify("Vocab Oasis", "Đây là thông báo thử - lời nhắc học của bạn sẽ trông như thế này."); break;
     case "settheme": S.set.theme = t.dataset.v; applySettings(); save(); render(); break;
     case "setfs": S.set.fs = t.dataset.v; applySettings(); save(); render(); break;
     case "avclear": S.set.avatar = ""; save(); render(); toast("Đã xoá ảnh đại diện"); break;
@@ -1353,8 +1348,8 @@ document.addEventListener("click", e => {
     case "expdata": downloadJSON(`vocab-oasis-${today()}.json`, S); toast("Đã tải dữ liệu học tập"); break;
     case "legal": { const L = LEGAL[t.dataset.k]; dlg({ icon: "file", title: L[0], msg: L[1], cancel: false, ok: "Đã đọc" }); break; }
     case "clearhist": dlg({ danger: true, icon: "trash", title: "Xoá lịch sử học tập?", msg: "Toàn bộ lịch sử quiz và game sẽ bị xoá. Tiến độ học, XP và level vẫn giữ nguyên.", ok: "Xoá lịch sử", onOk: () => { S.hist = []; S.cw.history = []; save(); render(); toast("Đã xoá lịch sử học tập"); } }); break;
-    case "resetprog": dlg({ danger: true, icon: "warn", title: "Đặt lại tiến độ học?", msg: "Từ đã học, XP, level, ngày hoàn thành và lịch ôn sẽ bị xoá. Cài đặt và danh sách kho từ vựng được giữ lại. <b>Không thể hoàn tác.</b>", word: "DAT LAI", ok: "Đặt lại tiến độ", onOk: () => { const sb = S.sb, st = S.set, vl = S.vault.map(w => ({ word: w.word })); S = fresh(); S.sb = sb; S.set = st; S.vault = vl; afterReset(); toast("Đã đặt lại tiến độ học"); } }); break;
-    case "wipeall": dlg({ danger: true, icon: "warn", title: "Xoá toàn bộ dữ liệu?", msg: "Mọi dữ liệu trên thiết bị này sẽ bị xoá vĩnh viễn: tiến độ, kho từ vựng, cài đặt, ảnh đại diện. <b>Không thể hoàn tác.</b>", word: "XOA", ok: "Xoá tất cả", onOk: () => { const sb = S.sb; S = fresh(); S.sb = sb; try { localStorage.removeItem(INTRO_KEY); } catch (e) { } afterReset(); toast("Đã xoá toàn bộ dữ liệu"); } }); break;
+    case "resetprog": dlg({ danger: true, icon: "warn", title: "Đặt lại tiến độ học?", msg: "Từ đã học, XP, level, ngày hoàn thành và lịch ôn sẽ bị xoá. Cài đặt và danh sách kho từ vựng được giữ lại. <b>Không thể hoàn tác.</b>", word: "DAT LAI", ok: "Đặt lại tiến độ", onOk: () => { const sb = S.sb, st = S.set, it = S.intro, vl = S.vault.map(w => ({ word: w.word })); S = fresh(); S.sb = sb; S.set = st; S.intro = it; S.vault = vl; afterReset(); toast("Đã đặt lại tiến độ học"); } }); break;
+    case "wipeall": dlg({ danger: true, icon: "warn", title: "Xoá toàn bộ dữ liệu?", msg: "Mọi dữ liệu của tài khoản sẽ bị xoá vĩnh viễn, kể cả trên các thiết bị khác đang đồng bộ: tiến độ, kho từ vựng, cài đặt, ảnh đại diện. <b>Không thể hoàn tác.</b>", word: "XOA", ok: "Xoá tất cả", onOk: () => { const sb = S.sb; S = fresh(); S.sb = sb; try { localStorage.removeItem(INTRO_KEY); } catch (e) { } afterReset(); toast("Đã xoá toàn bộ dữ liệu"); } }); break;
     case "nav": if (t.dataset.p === "Quiz" && (page !== "Quiz" || !QZ || QZ.done)) { quizSrc = "day"; QZ = null; } go(t.dataset.p); break;
     case "bell": showDue(true); break;
     case "feedback": if (window.VocabFeedback) window.VocabFeedback.open(); break;
@@ -1893,8 +1888,12 @@ if (hasSS()) speechSynthesis.addEventListener("voiceschanged", narrUI);
 
 /* ================= INTRO (lần đầu: gõ chữ + zoom xuyên qua · lần sau: VOCAB OASIS) ================= */
 const INTRO_KEY = "vocabOasis.introSeen";
-const introSeen = () => { try { return localStorage.getItem(INTRO_KEY) === "1"; } catch (e) { return false; } };
-const introMark = () => { try { localStorage.setItem(INTRO_KEY, "1"); } catch (e) { } };
+const introSeen = () => {
+  if (S.intro === 1) return true;
+  try { if (localStorage.getItem(INTRO_KEY) === "1") { S.intro = 1; save(); return true; } } catch (e) { } /* cờ cũ trên máy → chuyển vào dữ liệu tài khoản để đồng bộ */
+  return false;
+};
+const introMark = () => { S.intro = 1; save(); };
 function startIntro(done) {
   const first = !introSeen(), ov = document.createElement("div"), rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
   ov.id = "intro"; ov.className = "intro " + (first ? "first" : "back"); let over = false;
@@ -1958,22 +1957,9 @@ const lockPop = m => dlg({ icon: "lock", title: "Chưa mở khoá", msg: m, canc
 
 /* ================= CÀI ĐẶT ================= */
 const APP_VER = "1.0.0";
-const SET_DEF = { theme: "light", fs: "m", motion: true, email: "", avatar: "", rem: { daily: false, time: "20:00", review: false, days: [0, 1, 2, 3, 4, 5, 6], last: {} } };
-function normSet() { const o = S.set || {}; S.set = Object.assign({}, SET_DEF, o); S.set.rem = Object.assign({}, SET_DEF.rem, o.rem || {}); if (!Array.isArray(S.set.rem.days)) S.set.rem.days = SET_DEF.rem.days.slice(); S.set.rem.last = S.set.rem.last || {}; }
+const SET_DEF = { theme: "light", fs: "m", motion: true, email: "", avatar: "" };
+function normSet() { const o = S.set || {}; S.set = Object.assign({}, SET_DEF, o); delete S.set.rem; /* đã bỏ tính năng nhắc học: dọn dữ liệu cũ */ }
 function applySettings() { const r = document.documentElement, t = S.set; r.dataset.theme = t.theme === "dark" ? "dark" : "light"; r.classList.toggle("fs-s", t.fs === "s"); r.classList.toggle("fs-l", t.fs === "l"); r.classList.toggle("no-motion", !t.motion); }
-const notifOK = () => "Notification" in window;
-const notifState = () => !notifOK() ? "Trình duyệt này không hỗ trợ thông báo." : Notification.permission === "granted" ? "Thông báo trình duyệt: đã cho phép ✓" : Notification.permission === "denied" ? "Thông báo trình duyệt đang bị chặn - lời nhắc sẽ hiện dạng cửa sổ trong web." : "Thông báo trình duyệt: chưa cấp quyền (sẽ hỏi khi bạn bật lời nhắc).";
-function notify(title, body) { if (notifOK() && Notification.permission === "granted") { try { new Notification(title, { body }); return; } catch (e) { } } dlg({ icon: "bell", title, msg: body, cancel: false, ok: "Đã biết" }); }
-function remCheck() {
-  if (!APP_ON) return;
-  const r = S.set && S.set.rem; if (!r || (!r.daily && !r.review)) return;
-  const n = new Date(); if (!r.days.includes(n.getDay())) return;
-  const [h, m] = (r.time || "20:00").split(":").map(Number), diff = n.getHours() * 60 + n.getMinutes() - (h * 60 + m); if (diff < 0 || diff > 180) return;
-  const t = today();
-  if (r.daily && r.last.daily !== t) { r.last.daily = t; save(); const d = DAYS[currentDay() - 1]; notify("Đến giờ học rồi!", `Hôm nay học Day ${pad(currentDay())}: ${d.title}.`); return; }
-  if (r.review && r.last.review !== t) { r.last.review = t; save(); const k = dueDays().length; if (k) notify("Có bài cần ôn lại", `Bạn có ${k} bài đến hạn ôn tập hôm nay. Vào Dashboard để làm quiz ôn nhé.`); }
-}
-setInterval(remCheck, 20000);
 const tgl = (k, on) => `<button class="tgl ${on ? "on" : ""}" role="switch" aria-checked="${on}" data-act="settgl" data-k="${k}"><i></i></button>`;
 const seg = (act, cur, opts) => `<div class="seg">${opts.map(([v, l]) => `<button class="${cur === v ? "on" : ""}" data-act="${act}" data-v="${v}">${l}</button>`).join("")}</div>`;
 function cloudNote() {
@@ -1983,9 +1969,8 @@ function cloudNote() {
   return "Đang kết nối để đồng bộ tiến độ theo tài khoản…";
 }
 function pageSettings() {
-  const t = S.set, r = t.rem, c = counts(), ini = (S.name.trim().split(/\\s+/).slice(-2).map(x => x[0]).join("") || "B").toUpperCase().slice(0, 2);
+  const t = S.set, c = counts(), ini = (S.name.trim().split(/\\s+/).slice(-2).map(x => x[0]).join("") || "B").toUpperCase().slice(0, 2);
   const nQuiz = (S.hist || []).filter(h => h.type === "quiz").length, nGame = (S.hist || []).filter(h => h.type === "game").length;
-  const WDN = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
   return `<div class="page settings-page">
   <div class="section-heading"><div><span class="eyebrow">Tuỳ chỉnh của bạn</span><h2>Cài đặt</h2><p>Mọi thay đổi được lưu ngay trên thiết bị này.</p></div></div>
   <section class="set-card"><h3>Tài khoản cá nhân</h3><p class="set-sub">Thông tin cơ bản hiển thị trong web.</p>
@@ -1993,12 +1978,6 @@ function pageSettings() {
     <div class="set-grid"><label>Tên hiển thị<input id="setname" maxlength="24" value="${esc(S.name)}"></label><label>Email<input id="setmail" type="email" placeholder="email@example.com" value="${esc(t.email)}"></label></div>
     <div class="set-row"><button class="primary" data-act="profsave">Lưu thông tin</button><button class="ghost" data-act="logout">${ic("door", 15)} Đăng xuất</button></div>
     <p class="set-note">${window.VocabUser && window.VocabUser.email ? `Đang đăng nhập bằng <b>${esc(window.VocabUser.email)}</b>. ` : ""}${cloudNote()}</p></section>
-  <section class="set-card"><h3>Thông báo và nhắc học</h3><p class="set-sub">Lời nhắc chỉ hoạt động khi trang web đang mở trong trình duyệt.</p>
-    <div class="set-line"><div><b>Nhắc học hằng ngày</b><small>Nhắc bạn học bài của ngày hôm nay</small></div>${tgl("daily", r.daily)}</div>
-    <div class="set-line"><div><b>Nhắc ôn từ đã học</b><small>Nhắc khi có bài đến hạn ôn tập (chỉ nhắc nếu thật sự có bài cần ôn)</small></div>${tgl("review", r.review)}</div>
-    <div class="set-line"><div><b>Giờ nhắc</b><small>Áp dụng cho cả hai loại nhắc</small></div><input type="time" id="remtime" value="${esc(r.time)}"></div>
-    <div class="set-line col"><div><b>Ngày nhận nhắc</b></div><div class="day-chips">${[1, 2, 3, 4, 5, 6, 0].map(d => `<button class="${r.days.includes(d) ? "on" : ""}" data-act="remday" data-d="${d}">${WDN[d]}</button>`).join("")}</div></div>
-    <p class="set-note">${notifState()} Hiện chưa hỗ trợ nhắc qua email.</p><div class="set-row"><button class="ghost" data-act="remtest">Gửi thử thông báo</button></div></section>
   <section class="set-card"><h3>Giao diện</h3><p class="set-sub">Điều chỉnh cho dễ nhìn hơn.</p>
     <div class="set-line"><div><b>Chế độ</b></div>${seg("settheme", t.theme, [["light", "Sáng"], ["dark", "Tối"]])}</div>
     <div class="set-line"><div><b>Cỡ chữ</b></div>${seg("setfs", t.fs, [["s", "Nhỏ"], ["m", "Vừa"], ["l", "Lớn"]])}</div>
@@ -2021,12 +2000,11 @@ function downloadJSON(name, obj) { const b = new Blob([JSON.stringify(obj, null,
 function afterReset() { hydrateVault(); normSet(); applySettings(); save(); resetModes(); selW = null; QZ = null; if (typeof GM !== "undefined") GM = null; go("Dashboard"); }
 const LEGAL = {
   terms: ["Điều khoản sử dụng", "<p>Vocab Oasis là công cụ học từ vựng miễn phí, được tạo để hỗ trợ bạn ôn thi THPTQG và VACT.</p><ul><li>Bạn tự chịu trách nhiệm về cách sử dụng nội dung học trong web.</li><li>Nội dung bài đọc và từ vựng chỉ dùng cho mục đích học tập cá nhân.</li><li>Web có thể thay đổi hoặc cập nhật tính năng mà không báo trước.</li><li>Web được cung cấp “nguyên trạng”, không đảm bảo hoạt động liên tục hay không có lỗi.</li></ul>"],
-  privacy: ["Chính sách bảo mật", "<p>Chúng tôi ưu tiên giữ dữ liệu của bạn ở trên thiết bị của bạn.</p><ul><li>Tiến độ học, cài đặt, ảnh đại diện và kho từ vựng được lưu trong trình duyệt của bạn (localStorage), không gửi về máy chủ.</li><li>Web không có tài khoản đăng nhập và không thu thập dữ liệu cá nhân.</li><li>Khi bạn thêm từ vào kho, từ đó có thể được gửi tới dịch vụ từ điển/dịch thuật miễn phí để tra nghĩa tự động.</li><li>Bạn có thể tải xuống hoặc xoá toàn bộ dữ liệu bất cứ lúc nào trong phần Cài đặt. Xoá dữ liệu trình duyệt cũng sẽ xoá tiến độ học.</li></ul>"],
+  privacy: ["Chính sách bảo mật", "<p>Chúng tôi chỉ lưu những dữ liệu cần thiết để web hoạt động.</p><ul><li>Tiến độ học, tên hiển thị, email, cài đặt và kho từ vựng được lưu trong tài khoản của bạn trên Firebase (Google) để đồng bộ giữa các thiết bị; ảnh đại diện chỉ lưu trong trình duyệt của bạn.</li><li>Web dùng email hoặc tài khoản Google để đăng nhập; chỉ bạn mới đọc được dữ liệu của mình.</li><li>Khi bạn thêm từ vào kho, từ đó có thể được gửi tới dịch vụ từ điển/dịch thuật miễn phí để tra nghĩa tự động.</li><li>Bạn có thể tải xuống hoặc xoá toàn bộ dữ liệu bất cứ lúc nào trong phần Cài đặt. Dữ liệu trên thiết bị này sẽ được khôi phục từ tài khoản ở lần đăng nhập tiếp theo.</li></ul>"],
 };
 document.addEventListener("change", e => {
   const t = e.target;
-  if (t.id === "remtime") { S.set.rem.time = t.value || "20:00"; S.set.rem.last = {}; save(); toast(`Đã đặt giờ nhắc: ${S.set.rem.time}`); }
-  else if (t.id === "avfile" && t.files[0]) {
+  if (t.id === "avfile" && t.files[0]) {
     const f = t.files[0]; if (!/^image\//.test(f.type)) { dlg({ icon: "image", title: "Tệp không hợp lệ", msg: "Vui lòng chọn một tệp ảnh (jpg, png, webp…).", cancel: false, ok: "Đã hiểu" }); return; }
     const img = new Image(), url = URL.createObjectURL(f);
     img.onload = () => { const cv = document.createElement("canvas"), z = 128; cv.width = cv.height = z; const m = Math.min(img.width, img.height), x = cv.getContext("2d"); x.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, z, z); S.set.avatar = cv.toDataURL("image/jpeg", .85); URL.revokeObjectURL(url); save(); render(); toast("Đã cập nhật ảnh đại diện"); };
@@ -3108,7 +3086,7 @@ if (!configured) {
         if (c.str && c.upd > lastUpd) {
           /* thiết bị khác đã lưu bản mới hơn → lấy bản đó, không ghi đè */
           if (st().busy()) { schedule(); return; }
-          st().apply(c.str); lastUpd = c.upd; setStatus('ok'); st().toast('Đã cập nhật tiến độ từ thiết bị khác');
+          st().apply(c.str); lastUpd = c.upd; setStatus('ok');
           return;
         }
         const snap = st().snapshot();
@@ -3148,7 +3126,7 @@ if (!configured) {
       if (!ready || pushing) return;
       try {
         const c = await fetchCloud();
-        if (c.str && c.upd > lastUpd && !st().busy()) { st().apply(c.str); lastUpd = c.upd; setStatus('ok'); st().toast('Đã cập nhật tiến độ từ thiết bị khác'); }
+        if (c.str && c.upd > lastUpd && !st().busy()) { st().apply(c.str); lastUpd = c.upd; setStatus('ok'); }
       } catch (e) { }
     }
     function stop() { ready = false; uid = null; if (timer) { clearTimeout(timer); timer = null; } }
