@@ -811,7 +811,15 @@ const fresh = () => ({ v: 1, name: "Bạn học", xp: 0, words: {}, days: {}, lo
 let S = (() => { try { const r = JSON.parse(localStorage.getItem(KEY)); if (r && r.v === 1) return Object.assign(fresh(), r); } catch (e) { } return fresh(); })();
 S.cw = Object.assign({ gold: 0, games: 0, plays: {}, history: [] }, S.cw || {});
 function logHist(type, title, sub, xp, score) { S.hist = S.hist || []; S.hist.push({ type, ts: Date.now(), title, sub, xp: xp || 0, score: score == null ? null : score }); if (S.hist.length > 150) S.hist = S.hist.slice(-150); }
-function save() { try { S.best = Math.max(S.best, streak()); localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+function save() {
+  try {
+    S.best = Math.max(S.best, streak());
+    S.upd = Math.max(Date.now(), (S.upd || 0) + 1); /* mốc thời gian của lần thay đổi, dùng để so khi đồng bộ */
+    const cu = window.VocabCloud && window.VocabCloud.uid && window.VocabCloud.uid(); if (cu) S.uid = cu;
+    localStorage.setItem(KEY, JSON.stringify(S));
+  } catch (e) { }
+  if (window.VocabCloud && window.VocabCloud.schedule) window.VocabCloud.schedule();
+}
 const L = () => (S.log[today()] ||= { sec: 0, learned: 0, xp: 0 });
 const lvlNow = () => Math.floor(S.xp / 500) + 1, CW_LV = 2, readCount = () => Object.values(S.days).filter(z => z && z.read).length;
 let lvTimers = [];
@@ -1968,6 +1976,12 @@ function remCheck() {
 setInterval(remCheck, 20000);
 const tgl = (k, on) => `<button class="tgl ${on ? "on" : ""}" role="switch" aria-checked="${on}" data-act="settgl" data-k="${k}"><i></i></button>`;
 const seg = (act, cur, opts) => `<div class="seg">${opts.map(([v, l]) => `<button class="${cur === v ? "on" : ""}" data-act="${act}" data-v="${v}">${l}</button>`).join("")}</div>`;
+function cloudNote() {
+  const st = window.VocabStore && window.VocabStore.status;
+  if (st && st.state === "ok") { const d = new Date(st.at); return `Tiến độ học, tên hiển thị và email được đồng bộ theo tài khoản (lần gần nhất lúc ${pad(d.getHours())}:${pad(d.getMinutes())}). Ảnh đại diện hiện chỉ lưu trên máy này.`; }
+  if (st && st.state === "error") return "Chưa đồng bộ được với tài khoản (kiểm tra mạng hoặc Firestore Rules). Tiến độ vẫn được lưu trên máy này; dùng mục Dữ liệu học tập để sao lưu thủ công nếu cần.";
+  return "Đang kết nối để đồng bộ tiến độ theo tài khoản…";
+}
 function pageSettings() {
   const t = S.set, r = t.rem, c = counts(), ini = (S.name.trim().split(/\\s+/).slice(-2).map(x => x[0]).join("") || "B").toUpperCase().slice(0, 2);
   const nQuiz = (S.hist || []).filter(h => h.type === "quiz").length, nGame = (S.hist || []).filter(h => h.type === "game").length;
@@ -1978,7 +1992,7 @@ function pageSettings() {
     <div class="set-avatar"><span class="avatar big" ${t.avatar ? `style="background:url(${t.avatar}) center/cover"` : ""}>${t.avatar ? "" : esc(ini)}</span><div class="set-av-btns"><label class="ghost btn-like">Đổi ảnh đại diện<input type="file" id="avfile" accept="image/*" hidden></label>${t.avatar ? `<button class="ghost" data-act="avclear">Xoá ảnh</button>` : ""}</div></div>
     <div class="set-grid"><label>Tên hiển thị<input id="setname" maxlength="24" value="${esc(S.name)}"></label><label>Email<input id="setmail" type="email" placeholder="email@example.com" value="${esc(t.email)}"></label></div>
     <div class="set-row"><button class="primary" data-act="profsave">Lưu thông tin</button><button class="ghost" data-act="logout">${ic("door", 15)} Đăng xuất</button></div>
-    <p class="set-note">${window.VocabUser && window.VocabUser.email ? `Đang đăng nhập bằng <b>${esc(window.VocabUser.email)}</b>. ` : ""}Tiến độ học hiện được lưu trong trình duyệt này và chưa đồng bộ theo tài khoản, nên đổi thiết bị sẽ không mang theo tiến độ (dùng mục Dữ liệu học tập để tải xuống / nhập lại). Tên hiển thị và email ở trên chỉ lưu trên máy.</p></section>
+    <p class="set-note">${window.VocabUser && window.VocabUser.email ? `Đang đăng nhập bằng <b>${esc(window.VocabUser.email)}</b>. ` : ""}${cloudNote()}</p></section>
   <section class="set-card"><h3>Thông báo và nhắc học</h3><p class="set-sub">Lời nhắc chỉ hoạt động khi trang web đang mở trong trình duyệt.</p>
     <div class="set-line"><div><b>Nhắc học hằng ngày</b><small>Nhắc bạn học bài của ngày hôm nay</small></div>${tgl("daily", r.daily)}</div>
     <div class="set-line"><div><b>Nhắc ôn từ đã học</b><small>Nhắc khi có bài đến hạn ôn tập (chỉ nhắc nếu thật sự có bài cần ôn)</small></div>${tgl("review", r.review)}</div>
@@ -2051,6 +2065,26 @@ function syncProfileFromAccount() {
   if (!S.set.email && u.email) { S.set.email = u.email; changed = true; }
   if (changed) { save(); render(); }
 }
+/* Cầu nối cho module Firebase: đọc / ghi trạng thái học tập */
+window.VocabStore = {
+  status: null,
+  meta() { return { uid: S.uid || null, upd: S.upd || 0, xp: S.xp || 0 }; },
+  snapshot() { const o = JSON.parse(JSON.stringify(S)); delete o.sb; if (o.set) delete o.set.avatar; return { str: JSON.stringify(o), upd: S.upd || 0 }; },
+  apply(str) {
+    const o = JSON.parse(str), sb = S.sb, av = S.set && S.set.avatar;
+    S = Object.assign(fresh(), o); if (sb !== undefined) S.sb = sb;
+    normSet(); if (av) S.set.avatar = av;
+    S.cw = Object.assign({ gold: 0, games: 0, plays: {}, history: [] }, S.cw || {});
+    if (!isOpen(S.sel)) S.sel = currentDay();
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { }
+    try { applySettings(); } catch (e) { }
+    if (APP_ON) render();
+  },
+  reset() { const sb = S.sb; S = fresh(); if (sb !== undefined) S.sb = sb; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } },
+  setUid(u) { S.uid = u; try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } },
+  busy() { return !!(FULL || page === "Game"); },
+  toast(m) { try { toast(m); } catch (e) { } }
+};
 window.VocabApp = {
   start() { APP_ON = true; syncProfileFromAccount(); startIntro(() => { if (dueDays().length || S.vault.some(w => wstatus(w.word) === "due")) showDue(); }); },
   stop() { APP_ON = false; try { stopSpeak(); } catch (e) { } dueClose(); closePop(); const d = document.getElementById("dlg"); if (d) d.remove(); dismissLv(); FULL = false; page = "Dashboard"; resetModes(); render(); window.scrollTo(0, 0); }
@@ -2934,11 +2968,21 @@ button:disabled { opacity: .6; cursor: not-allowed; }
       this.resolved = true;
       window.VocabUser = { name: user.displayName || '', email: user.email || '' };
       if (this.entered) return;
-      this.entered = true; this.hideBoot();
-      if (window.VocabAuthUI && window.VocabAuthUI.reset) window.VocabAuthUI.reset();
-      $('authHost').classList.add('hidden'); $('appRoot').classList.remove('hidden');
-      document.title = MAIN_TITLE;
-      window.VocabApp.start();
+      this.entered = true;
+      var self = this;
+      var go = function () {
+        if (!self.entered) return; /* đã đăng xuất trong lúc chờ */
+        self.hideBoot();
+        if (window.VocabAuthUI && window.VocabAuthUI.reset) window.VocabAuthUI.reset();
+        $('authHost').classList.add('hidden'); $('appRoot').classList.remove('hidden');
+        document.title = MAIN_TITLE;
+        window.VocabApp.start();
+      };
+      var cloud = window.VocabCloud;
+      if (cloud && cloud.load) {
+        /* kéo tiến độ từ Firestore về trước khi hiện web (tối đa 8 giây để không bị kẹt khi mạng yếu) */
+        Promise.race([cloud.load(user), new Promise(function (r) { setTimeout(r, 8000); })]).catch(function () { }).then(go);
+      } else go();
     },
     leave: function () {
       if (this.entered) { this.entered = false; window.VocabApp.stop(); }
@@ -3045,6 +3089,73 @@ if (!configured) {
     }
   }
 
+  /* ---------- Đồng bộ tiến độ học: users/{uid}.progress (chuỗi JSON) + progressUpd (mốc thời gian) ---------- */
+  const CLOUD = window.VocabCloud = (function () {
+    const st = () => window.VocabStore;
+    let uid = null, ready = false, lastUpd = 0, timer = null, pushing = false;
+    const setStatus = (state) => { const s = st(); if (s) s.status = { state, at: Date.now() }; };
+    const refDoc = () => doc(db, USERS_COLLECTION, uid);
+    async function fetchCloud() {
+      const snap = await getDoc(refDoc());
+      const d = snap.exists() ? snap.data() : {};
+      return { str: typeof d.progress === 'string' ? d.progress : null, upd: Number(d.progressUpd) || 0 };
+    }
+    async function push() {
+      if (!ready || !uid || pushing) return;
+      pushing = true;
+      try {
+        const c = await fetchCloud();
+        if (c.str && c.upd > lastUpd) {
+          /* thiết bị khác đã lưu bản mới hơn → lấy bản đó, không ghi đè */
+          if (st().busy()) { schedule(); return; }
+          st().apply(c.str); lastUpd = c.upd; setStatus('ok'); st().toast('Đã cập nhật tiến độ từ thiết bị khác');
+          return;
+        }
+        const snap = st().snapshot();
+        await setDoc(refDoc(), { progress: snap.str, progressUpd: snap.upd, progressSavedAt: serverTimestamp() }, { merge: true });
+        lastUpd = snap.upd; setStatus('ok');
+      } catch (err) {
+        console.error('Không đồng bộ được tiến độ lên Firestore (kiểm tra Rules):', err);
+        setStatus('error');
+      } finally { pushing = false; }
+    }
+    function schedule() { if (!ready || timer) return; timer = setTimeout(() => { timer = null; push(); }, 5000); }
+    async function flush() { if (timer) { clearTimeout(timer); timer = null; } await push(); }
+    async function load(user) {
+      uid = user.uid; ready = false;
+      const s = st();
+      try {
+        const m0 = s.meta();
+        if (m0.uid && m0.uid !== uid) s.reset(); /* dữ liệu trên máy là của tài khoản khác → không dùng chung */
+        const c = await fetchCloud();
+        const m = s.meta();
+        let useCloud = false;
+        if (c.str) {
+          if (m.uid === uid) useCloud = c.upd > m.upd;
+          else if (!m.uid) { let cx = 0; try { cx = JSON.parse(c.str).xp || 0; } catch (e) { } useCloud = m.xp <= cx; } /* dữ liệu cũ chưa gắn tài khoản: giữ bản nhiều XP hơn */
+          else useCloud = true;
+        }
+        if (useCloud) { s.apply(c.str); lastUpd = c.upd; } else { lastUpd = c.upd; }
+        s.setUid(uid);
+        ready = true; setStatus('ok');
+        if (!useCloud) push(); /* bản trên máy mới hơn / chưa có bản trên cloud → đẩy lên */
+      } catch (err) {
+        console.error('Không tải được tiến độ từ Firestore (kiểm tra Rules):', err);
+        setStatus('error');
+      }
+    }
+    async function pull() {
+      if (!ready || pushing) return;
+      try {
+        const c = await fetchCloud();
+        if (c.str && c.upd > lastUpd && !st().busy()) { st().apply(c.str); lastUpd = c.upd; setStatus('ok'); st().toast('Đã cập nhật tiến độ từ thiết bị khác'); }
+      } catch (e) { }
+    }
+    function stop() { ready = false; uid = null; if (timer) { clearTimeout(timer); timer = null; } }
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') pull(); else flush(); });
+    return { load, schedule, flush, stop, uid: () => (ready ? uid : null) };
+  })();
+
   let authBusy = false;
   async function run(remember, job) {
     ui.clearMessage();
@@ -3107,14 +3218,16 @@ if (!configured) {
         ui.setBusy(false);
       }
     },
-    logout() {
+    async logout() {
+      try { await CLOUD.flush(); } catch (e) { }
+      CLOUD.stop();
       return signOut(auth).then(() => ui.clearMessage());
     }
   };
 
   onAuthStateChanged(auth, (user) => {
     if (authBusy) return; // đang đăng nhập/đăng ký: run() sẽ tự xử lý
-    if (user) window.VocabGate.enter(user); else window.VocabGate.leave();
+    if (user) window.VocabGate.enter(user); else { CLOUD.stop(); window.VocabGate.leave(); }
   });
 }
 </script>
