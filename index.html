@@ -731,6 +731,12 @@ body.gfull .toast{z-index:260;bottom:calc(26px + env(safe-area-inset-bottom))}
 .game-full{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;background:var(--background);height:100vh;height:100dvh}
 .game-full.enter{animation:gfin .22s ease both}
 .game-shell:has(>.ws-phone){background:none;border:0;box-shadow:none;padding:0;min-height:0}
+.qz-full{background:linear-gradient(180deg,#FFFBEB 0%,#FEF3C7 100%)}
+.qz-shell{margin:auto;width:100%;max-width:700px}
+.qz-shell .quiz-progress,.qz-shell .quiz-card,.qz-shell .result-card{max-width:none}
+.qz-shell .result-card{max-width:560px}
+.qz-hint{font-size:11.7px;color:var(--muted-foreground)}
+@media (max-width:760px){.qz-hint{display:none}.qz-shell .answers{grid-template-columns:1fr}.qz-shell .quiz-footer{justify-content:flex-end}}
 @keyframes gfin{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
 .gf-top{flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(12px + env(safe-area-inset-top)) 22px 12px;background:rgba(255,253,245,.9);border-bottom:1px solid var(--border)}
 .gf-title{display:flex;align-items:center;gap:11px;min-width:0}
@@ -1391,7 +1397,7 @@ function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("s
 const NAV = [["Dashboard", "dashboard"], ["Bài đọc", "book"], ["Từ vựng", "vocab"], ["Kho từ vựng", "cards"], ["Flashcard", "cards"], ["Game", "game"], ["Quiz", "quiz"], ["Cài đặt", "gear"]];
 let page = "Dashboard", focusW = null, vq = "", vDay = "all", vStatus = "all", selW = null;
 const isPhone = () => matchMedia("(max-width:760px)").matches;
-let FC = null, GM = null, QZ = null, gTick = null, quizSrc = "day", FULL = false, GF_SHOWN = false;
+let FC = null, GM = null, QZ = null, gTick = null, quizSrc = "day", FULL = false, GF_SHOWN = false, QF_SHOWN = false;
 const resetModes = () => { FC = null; GM = null; QZ = null; stopSpeak(); };
 
 function renderSide() {
@@ -2301,6 +2307,12 @@ function buildQuiz(src, dayArg) {
     return { q, sub, opts, correct, w, k };
   });
   QZ = { day: pool ? 0 : src, vault, due, rday: rd, qs, i: 0, picked: null, score: 0, res: [], done: false };
+  QZ.kind = due ? "Ôn tập" : vault ? "Kiểm tra" : (dayDone(src) ? "Ôn tập" : "Kiểm tra");
+  QZ.label = due ? (rd ? `Ngày ${rd}: ${DAYS[rd - 1].title}` : "Từ trong kho đến hạn") : vault ? "Kho từ vựng" : `Ngày ${src}: ${DAYS[src - 1].title}`;
+}
+function qFullHTML(inner) {
+  const enter = QF_SHOWN ? "" : " enter"; QF_SHOWN = true;
+  return `<div class="game-full qz-full${enter}"><div class="gf-top"><div class="gf-title"><span>${ic("quiz", 20)}</span><div><b>${esc(QZ.kind)} - ${esc(QZ.label)}</b></div></div><button class="gf-exit" data-act="qquit" title="Thoát quiz (Esc)">${ic("door", 17)} Thoát</button></div><div class="gf-body"><div class="qz-shell">${inner}</div></div></div>`;
 }
 function pageQuiz() {
   const d = DAYS[S.sel - 1], best = S.days[d.day] && S.days[d.day].quiz;
@@ -2310,16 +2322,16 @@ function pageQuiz() {
   if (!QZ) return `<div class="page center-page quiz-page">${head("10 câu hỏi · đạt từ 90% để hoàn thành ngày học (+100 XP) và bắt đầu lịch ôn 3 → 7 → 14 → 30 ngày")}<div class="result-card"><span class="eyebrow">${esc(d.topic)}</span><h2>${esc(d.title)}</h2>${dayDone(d.day) ? `<p><b>Day ${pad(d.day)} đã hoàn thành ✓</b> · điểm cao nhất <b>${best}%</b><br>Bạn muốn làm lại? Làm lại được tính là lượt ôn tập và chỉ nhận <b>+15 XP</b>.</p><div class="row"><button class="primary" data-act="qstart">Làm lại ${ic("arrow", 16)}</button></div>` : `<p>Câu hỏi được tạo từ 10 từ của bài: nghĩa – từ, điền chỗ trống, đồng nghĩa.<br>${best != null ? `Điểm cao nhất của bạn: <b>${best}%</b>` : "Bạn chưa làm quiz bài này."}</p><div class="row"><button class="primary" data-act="qstart">Bắt đầu ${ic("arrow", 16)}</button></div>`}</div></div>`;
   if (QZ.done) {
     const n = QZ.qs.length, pct = Math.round(QZ.score / n * 100), pass = QZ.due ? (QZ.rday ? pct >= 80 : true) : QZ.vault ? pct >= 80 : pct >= 90, wrong = QZ.res.filter(r => !r.ok);
-    return `<div class="page center-page quiz-page">${head("Kết quả")}<div class="result-card"><span class="eyebrow">${QZ.due ? (QZ.rday ? (pass ? "Ôn tập thành công" : "Cần ôn lại") : "Hoàn thành lượt ôn tập") : QZ.vault ? (pass ? "Đạt yêu cầu" : "Chưa đạt 80%") : pass ? "Xuất sắc" : QZ.redo ? "Hoàn thành lượt ôn tập" : "Chưa đạt 90%"}</span><div class="big">${pct}%</div><h2>${QZ.score} / ${n} câu đúng</h2><p>${QZ.due ? `<b>${QZ.score}</b>/${n} câu đúng · +${QZ.gain} XP (${QZ.parts}). ${QZ.stageMsg || ""}` : QZ.vault ? (pass ? `+${QZ.gain} XP` : "Hãy xem lại các từ sai bên dưới rồi thử lại.") : `Ngày ${pad(QZ.day)} ${dayDone(QZ.day) ? "đã hoàn thành" : "chưa hoàn thành"} · <b>+${QZ.gain} XP</b>${QZ.gain ? ` (${QZ.parts})` : ""}. ${QZ.stageMsg}`}</p>
+    return qFullHTML(`<div class="result-card"><span class="eyebrow">${QZ.due ? (QZ.rday ? (pass ? "Ôn tập thành công" : "Cần ôn lại") : "Hoàn thành lượt ôn tập") : QZ.vault ? (pass ? "Đạt yêu cầu" : "Chưa đạt 80%") : pass ? "Xuất sắc" : QZ.redo ? "Hoàn thành lượt ôn tập" : "Chưa đạt 90%"}</span><div class="big">${pct}%</div><h2>${QZ.score} / ${n} câu đúng</h2><p>${QZ.due ? `<b>${QZ.score}</b>/${n} câu đúng · +${QZ.gain} XP (${QZ.parts}). ${QZ.stageMsg || ""}` : QZ.vault ? (pass ? `+${QZ.gain} XP` : "Hãy xem lại các từ sai bên dưới rồi thử lại.") : `Ngày ${pad(QZ.day)} ${dayDone(QZ.day) ? "đã hoàn thành" : "chưa hoàn thành"} · <b>+${QZ.gain} XP</b>${QZ.gain ? ` (${QZ.parts})` : ""}. ${QZ.stageMsg}`}</p>
       ${wrong.length ? `<ul class="wrong-list">${wrong.map(r => `<li><b>${esc(r.w.word)}</b> ${esc(r.w.phonetic)} - ${esc(r.w.vi)}</li>`).join("")}</ul>` : ""}
-      <div class="row">${QZ.due ? (dueDays().length ? `<button class="primary" data-act="dayreview" data-d="${dueDays()[0].day}">Ôn tiếp Day ${pad(dueDays()[0].day)} ${ic("arrow", 16)}</button>` : `<button class="primary" data-act="nav" data-p="Dashboard">Về Dashboard</button>`) : `<button class="ghost" data-act="qstart">Làm lại</button>`}<button class="ghost" data-act="goflash">Ôn flashcard</button>${!QZ.vault && !QZ.due && QZ.day < 30 ? `<button class="primary" data-act="nextday">Ngày tiếp theo ${ic("arrow", 16)}</button>` : ""}</div></div></div>`;
+      <div class="row">${QZ.due ? (dueDays().length ? `<button class="primary" data-act="dayreview" data-d="${dueDays()[0].day}">Ôn tiếp Day ${pad(dueDays()[0].day)} ${ic("arrow", 16)}</button>` : `<button class="primary" data-act="nav" data-p="Dashboard">Về Dashboard</button>`) : `<button class="ghost" data-act="qstart">Làm lại</button>`}<button class="ghost" data-act="goflash">Ôn flashcard</button>${!QZ.vault && !QZ.due && QZ.day < 30 ? `<button class="primary" data-act="nextday">Ngày tiếp theo ${ic("arrow", 16)}</button>` : ""}</div></div>`);
   }
   const c = QZ.qs[QZ.i], n = QZ.qs.length, p = QZ.picked, w = c.w;
-  return `<div class="page center-page quiz-page">${head("Chọn đáp án đúng nhất · phím tắt 1–4 và Enter")}<div class="quiz-progress"><div><span>Câu ${QZ.i + 1} / ${n}</span><b>${Math.round((QZ.i + (p !== null ? 1 : 0)) / n * 100)}%</b></div><i><b style="width:${(QZ.i + (p !== null ? 1 : 0)) / n * 100}%"></b></i></div>
+  return qFullHTML(`<div class="quiz-progress"><div><span>Câu ${QZ.i + 1} / ${n}</span><b>${Math.round((QZ.i + (p !== null ? 1 : 0)) / n * 100)}%</b></div><i><b style="width:${(QZ.i + (p !== null ? 1 : 0)) / n * 100}%"></b></i></div>
   <article class="quiz-card"><span class="question-number">Câu hỏi ${QZ.i + 1}</span><h2>${esc(c.q)}</h2>${c.sub ? `<div class="sentence">${c.sub}</div>` : ""}
   <div class="answers">${c.opts.map((o, i) => `<button data-act="qpick" data-i="${i}" ${p !== null ? "disabled" : ""} class="${p === null ? "" : i === c.correct ? "correct" : i === p ? "wrong" : ""}"><span>${String.fromCharCode(65 + i)}</span>${esc(o)}${p !== null && i === c.correct ? ic("check") : p === i ? ic("close") : ""}</button>`).join("")}</div>
   ${p !== null ? `<div class="explanation ${p === c.correct ? "ok" : "no"}">${ic(p === c.correct ? "check" : "close")}<div><b>${p === c.correct ? "Chính xác!" : "Chưa chính xác"}</b><p><strong>${esc(w.word)}</strong> ${esc(w.phonetic)} - ${esc(w.vi)}</p>${w.example ? `<p><i>${exBold(w.example)}</i></p>` : ""}</div></div>` : ""}
-  <div class="quiz-footer"><button data-act="qquit">Thoát</button><button class="primary" data-act="qnext" ${p === null ? "disabled" : ""}>${QZ.i === n - 1 ? "Xem kết quả" : "Câu tiếp theo"} ${ic("arrow")}</button></div></article></div>`;
+  <div class="quiz-footer"><span class="qz-hint">Phím tắt 1–4 để chọn · Enter để tiếp tục</span><button class="primary" data-act="qnext" ${p === null ? "disabled" : ""}>${QZ.i === n - 1 ? "Xem kết quả" : "Câu tiếp theo"} ${ic("arrow")}</button></div></article>`);
 }
 function finishQuiz() {
   QZ.done = true; const n = QZ.qs.length, pct = Math.round(QZ.score / n * 100);
@@ -2342,7 +2354,7 @@ function finishQuiz() {
 
 function render() {
   if (page !== "Game") { clearInterval(gTick); }
-  FULL = FULL && page === "Game" && !!GM; if (!FULL) GF_SHOWN = false; document.body.classList.toggle("gfull", FULL);
+  FULL = FULL && page === "Game" && !!GM; if (!FULL) GF_SHOWN = false; const QF = page === "Quiz" && !!QZ; if (!QF) QF_SHOWN = false; document.body.classList.toggle("gfull", FULL || QF);
   cwStop(); POP = null; if (NARR.on || NARR.paused) stopSpeak();
   const fn = { Dashboard: pageDashboard, "Bài đọc": pageReading, "Từ vựng": pageVocab, Flashcard: pageFlash, Game: pageGame, Quiz: pageQuiz, "Kho từ vựng": pageVault, "Cài đặt": pageSettings }[page];
   $("#page").innerHTML = fn(); renderSide(); renderHead();
@@ -2486,6 +2498,7 @@ document.addEventListener("keydown", e => {
   if (e.target.closest && e.target.closest("#fbHost,#authHost")) return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (FULL && e.key === "Escape" && !document.getElementById("dlg")) { e.preventDefault(); gExit(); return; }
+  if (page === "Quiz" && QZ && e.key === "Escape" && !document.getElementById("dlg")) { e.preventDefault(); const b = document.querySelector('[data-act="qquit"]'); if (b) b.click(); return; }
   if (page === "Flashcard" && FC && FC.i < FC.deck.length) {
     if (e.key === " ") { e.preventDefault(); const c = $("#fcard"); if (c) c.classList.toggle("flipped"); }
     else if (e.key === "1") fcGrade(false); else if (e.key === "2") fcGrade(true);
