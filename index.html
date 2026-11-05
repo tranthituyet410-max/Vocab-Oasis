@@ -5,6 +5,30 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id=%22g%22%20x1=%220%22%20y1=%220%22%20x2=%221%22%20y2=%221%22%3E%3Cstop%20offset=%220%22%20stop-color=%22%23f59e0b%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22%23d97706%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width=%2264%22%20height=%2264%22%20rx=%2216%22%20fill=%22url%28%23g%29%22/%3E%3Ccircle%20cx=%2248%22%20cy=%2214%22%20r=%226%22%20fill=%22%23fde68a%22%20opacity=%22.9%22/%3E%3Cpath%20fill=%22%23fff7ed%22%20d=%22M13%2038C13%2031%2017%2025%2022.500%2025C27%2025%2028%2031%2030%2032C32%2031%2033%2025%2038.500%2025C43.500%2025%2045%2031%2046%2034C47%2030%2048%2025%2050%2021C51%2018%2054%2016.500%2057%2018.500C60%2020%2060%2022.500%2057%2023.500C54.500%2024.500%2053.500%2027%2052.500%2031C51.500%2035%2050.500%2038%2050.500%2042L50.500%2054L45.500%2054L45%2045C40%2047%2030%2047%2024.500%2045L24%2054L19%2054L18.500%2043C14%2043%2013%2040.500%2013%2038Z%22/%3E%3Ccircle%20cx=%2255%22%20cy=%2220.500%22%20r=%221.300%22%20fill=%22%23d97706%22/%3E%3Cpath%20d=%22M51%2018.500L52.500%2014.500L54%2018%22%20fill=%22%23fff7ed%22/%3E%3Cpath%20d=%22M8%2057C20%2054%2044%2054%2056%2057%22%20stroke=%22%23fff7ed%22%20stroke-opacity=%22.35%22%20stroke-width=%222%22%20stroke-linecap=%22round%22%20fill=%22none%22/%3E%3C/svg%3E">
 <title>Vocab Oasis · 30 ngày chinh phục từ vựng</title>
+<meta name="description" content="Học từ vựng qua đọc hiểu, trò chơi và lặp lại ngắt quãng thông minh. 30 ngày chinh phục từ vựng cùng Vocab Oasis.">
+<meta name="theme-color" content="#d97706">
+<link rel="canonical" href="https://vocaboasis.vercel.app/">
+
+<!-- Open Graph / Facebook / Zalo / Messenger -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vocab Oasis">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:title" content="Vocab Oasis · 30 ngày chinh phục từ vựng">
+<meta property="og:description" content="Học từ vựng qua đọc hiểu, trò chơi và lặp lại ngắt quãng thông minh.">
+<meta property="og:url" content="https://vocaboasis.vercel.app/">
+<meta property="og:image" content="https://vocaboasis.vercel.app/og-image.png">
+<meta property="og:image:secure_url" content="https://vocaboasis.vercel.app/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Vocab Oasis - Learn Vocabulary, Remember Forever.">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Vocab Oasis · 30 ngày chinh phục từ vựng">
+<meta name="twitter:description" content="Học từ vựng qua đọc hiểu, trò chơi và lặp lại ngắt quãng thông minh.">
+<meta name="twitter:image" content="https://vocaboasis.vercel.app/og-image.png">
+<meta name="twitter:image:alt" content="Vocab Oasis - Learn Vocabulary, Remember Forever.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -731,12 +755,42 @@ body.gfull .toast{z-index:260;bottom:calc(26px + env(safe-area-inset-bottom))}
 .game-full{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;background:var(--background);height:100vh;height:100dvh}
 .game-full.enter{animation:gfin .22s ease both}
 .game-shell:has(>.ws-phone){background:none;border:0;box-shadow:none;padding:0;min-height:0}
-.qz-full{background:linear-gradient(180deg,#FFFBEB 0%,#FEF3C7 100%)}
-.qz-shell{margin:auto;width:100%;max-width:700px}
-.qz-shell .quiz-progress,.qz-shell .quiz-card,.qz-shell .result-card{max-width:none}
+.qz-full{background:#FFF4D6}
+.qz-bg{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block}
+.qz-start-hint{font-size:12.5px;color:var(--muted-foreground);margin-top:4px}
+.qz-bg-p{display:none}
+.qz-full .gf-top{position:relative;z-index:2;background:rgba(255,251,235,.6);border-bottom:0;backdrop-filter:none}
+.qz-full .gf-body{position:relative;z-index:1}
+.qz-full .gf-title b{font-size:15px}
+.qz-t-s,.qx-i{display:none}
+.qz-full .gf-exit{background:rgba(255,255,255,.7);height:32px;padding:0 16px;font-size:13px}
+.qz-shell{margin:clamp(6px,2.5vh,28px) auto auto;width:100%;max-width:540px}
+.qz-prog{margin:0 0 14px}
+.qz-plabel{text-align:right;font-size:12px;font-weight:800;color:#3B1D08}
+.qz-track{position:relative;height:8px;border-radius:4px;background:rgba(255,255,255,.55);margin-top:24px}
+.qz-track>i{position:absolute;left:0;top:0;bottom:0;border-radius:inherit;background:#D97706;display:block}
+.qz-track em{position:absolute;top:3px;width:3px;height:3px;border-radius:50%;background:#FFFDF5;opacity:.8;transform:translateX(-50%)}
+.qz-camel-w{position:absolute;bottom:100%;margin-bottom:-1px;transform:translateX(-50%);line-height:0;transition:left .4s ease}
+.qz-camel{width:30px;height:23px;display:block;transform:scaleX(-1)}
+.qz-shell .quiz-card{max-width:none;background:none;border:0;box-shadow:none;padding:6px 22px 0}
+.qz-shell .question-number{color:#B45309}
+.qz-shell .sentence{background:#DDF1F3;border:1.2px solid #6FC3DA;color:#0F3F4A;margin:-8px 0 18px}
+.qz-shell .answers button{background:rgba(255,255,255,.5);border:.8px solid #E0B96A;color:#3B1D08}
+.qz-shell .answers button:disabled{opacity:1}
+.qz-shell .answers button>span{background:rgba(254,243,199,.9);color:#B45309}
+.qz-shell .answers button.correct{background:rgba(234,246,221,.92);border-color:#65A30D;color:#3F6212}
+.qz-shell .answers button.correct>span{background:#fff;color:#3F6212}
+.qz-shell .answers button.wrong{background:rgba(255,240,237,.92);border-color:var(--coral);color:#b84940}
+.qz-shell .quiz-footer{border-top:0;margin-top:14px;padding-top:0;justify-content:flex-end}
 .qz-shell .result-card{max-width:560px}
-.qz-hint{font-size:11.7px;color:var(--muted-foreground)}
-@media (max-width:760px){.qz-hint{display:none}.qz-shell .answers{grid-template-columns:1fr}.qz-shell .quiz-footer{justify-content:flex-end}}
+@media (max-width:760px){
+  .qz-bg-l{display:none}.qz-bg-p{display:block}
+  .qz-t-l{display:none}.qz-t-s{display:block}.qx-t{display:none}.qx-i{display:inline-flex}
+  .qz-full .gf-exit{width:38px;height:34px;padding:0;justify-content:center}
+  .qz-shell .quiz-card{padding:4px 4px 0}
+  .qz-shell .answers{grid-template-columns:1fr}
+  .qz-shell .quiz-footer .primary{width:100%;justify-content:center}
+}
 @keyframes gfin{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
 .gf-top{flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(12px + env(safe-area-inset-top)) 22px 12px;background:rgba(255,253,245,.9);border-bottom:1px solid var(--border)}
 .gf-title{display:flex;align-items:center;gap:11px;min-width:0}
@@ -2308,15 +2362,21 @@ function buildQuiz(src, dayArg) {
   });
   QZ = { day: pool ? 0 : src, vault, due, rday: rd, qs, i: 0, picked: null, score: 0, res: [], done: false };
   QZ.kind = due ? "Ôn tập" : vault ? "Kiểm tra" : (dayDone(src) ? "Ôn tập" : "Kiểm tra");
+  QZ.dn = due ? rd : vault ? 0 : src; QZ.dt = QZ.dn ? DAYS[QZ.dn - 1].title : (due ? "Từ trong kho đến hạn" : "Kho từ vựng");
   QZ.label = due ? (rd ? `Ngày ${rd}: ${DAYS[rd - 1].title}` : "Từ trong kho đến hạn") : vault ? "Kho từ vựng" : `Ngày ${src}: ${DAYS[src - 1].title}`;
 }
+const QZ_CAMEL = `<svg class="qz-camel" viewBox="418 352 100 78" aria-hidden="true"><path d="M444 385 Q444 368 436 360" fill="none" stroke="#B8793A" stroke-width="7" stroke-linecap="round"/><ellipse cx="431" cy="360" rx="9" ry="5" fill="#B8793A"/><ellipse cx="478" cy="392" rx="32" ry="12" fill="#B8793A"/><ellipse cx="470" cy="380" rx="8" ry="9" fill="#B8793A"/><ellipse cx="492" cy="381" rx="8" ry="9" fill="#B8793A"/><path d="M456 404 V426 M492 404 V426 M468 404 V424 M504 404 V424" stroke="#B8793A" stroke-width="4" stroke-linecap="round"/></svg>`;
+const QZ_DOTS = [10, 20, 30, 40, 50, 60, 70, 80, 90].map(x => `<em style="left:${x}%"></em>`).join("");
+const QZ_BG = `<svg class="qz-bg qz-bg-l" viewBox="-60 0 800 460" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="qzSkyL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF4D6"/><stop offset="1" stop-color="#FBD9A0"/></linearGradient></defs><rect x="-60" width="800" height="460" fill="url(#qzSkyL)"/><circle cx="625" cy="120" r="36" fill="#FBD66B"/><circle cx="625" cy="120" r="52" fill="#FBD66B" opacity=".28"/><path d="M-60 345 Q120 275 240 315 T480 305 T740 295 L740 460 L-60 460Z" fill="#F2C879"/><path d="M-60 380 Q140 325 280 362 T560 348 T740 352 L740 460 L-60 460Z" fill="#E6AE5A"/><path d="M-60 425 Q170 380 330 410 T740 400 L740 460 L-60 460Z" fill="#D49440"/><ellipse cx="330" cy="448" rx="34" ry="8" fill="#9AB552"/><ellipse cx="330" cy="448" rx="28" ry="5.5" fill="#6FC3DA"/><ellipse cx="325" cy="447" rx="9" ry="1.6" fill="#A9E2EE"/><g fill="none" stroke="#6F8F3C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M40 424 V388 M40 410 H30 V398 M40 402 H50 V392"/><path d="M68 428 V404 M68 418 H60 V410"/><path d="M690 428 V398 M690 418 H680 V408 M690 410 H700 V402"/><path d="M722 416 V398 M722 408 H715 V402"/></g><g transform="translate(130 0)"><path d="M444 385 Q444 368 436 360" fill="none" stroke="#B8793A" stroke-width="7" stroke-linecap="round"/><ellipse cx="431" cy="360" rx="9" ry="5" fill="#B8793A" transform="rotate(-15 431 360)"/><path d="M468 404 V424 M504 404 V424" stroke="#9A5F28" stroke-width="4" stroke-linecap="round"/><ellipse cx="478" cy="392" rx="32" ry="12" fill="#B8793A"/><ellipse cx="470" cy="380" rx="8" ry="9" fill="#B8793A"/><ellipse cx="492" cy="381" rx="8" ry="9" fill="#B8793A"/><path d="M456 404 V426 M492 404 V426" stroke="#B8793A" stroke-width="4" stroke-linecap="round"/><path d="M508 390 Q516 396 514 408" fill="none" stroke="#9A5F28" stroke-width="3" stroke-linecap="round"/></g></svg><svg class="qz-bg qz-bg-p" viewBox="0 0 300 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="qzSkyP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF4D6"/><stop offset="1" stop-color="#FBD9A0"/></linearGradient></defs><rect width="300" height="600" fill="url(#qzSkyP)"/><path d="M0 540 Q80 505 160 535 T300 520 L300 600 L0 600Z" fill="#F2C879"/><path d="M0 560 Q90 535 180 556 T300 548 L300 600 L0 600Z" fill="#E6AE5A"/><path d="M0 585 Q110 565 220 582 T300 576 L300 600 L0 600Z" fill="#D49440"/><ellipse cx="120" cy="590" rx="32" ry="8" fill="#9AB552"/><ellipse cx="120" cy="590" rx="27" ry="5.5" fill="#6FC3DA"/><ellipse cx="115" cy="589" rx="9" ry="1.6" fill="#A9E2EE"/><g fill="none" stroke="#6F8F3C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M246 592 V562 M246 582 H237 V572 M246 576 H255 V568"/><path d="M270 594 V576 M270 586 H264 V580"/><path d="M34 594 V568 M34 586 H26 V576"/></g></svg>`;
 function qFullHTML(inner) {
   const enter = QF_SHOWN ? "" : " enter"; QF_SHOWN = true;
-  return `<div class="game-full qz-full${enter}"><div class="gf-top"><div class="gf-title"><span>${ic("quiz", 20)}</span><div><b>${esc(QZ.kind)} - ${esc(QZ.label)}</b></div></div><button class="gf-exit" data-act="qquit" title="Thoát quiz (Esc)">${ic("door", 17)} Thoát</button></div><div class="gf-body"><div class="qz-shell">${inner}</div></div></div>`;
+  const full = QZ.dn ? `${QZ.kind} - Ngày ${QZ.dn}: ${QZ.dt}` : `${QZ.kind} - ${QZ.dt}`;
+  const short = QZ.dn ? `${QZ.kind} · Ngày ${QZ.dn}` : QZ.kind;
+  return `<div class="game-full qz-full${enter}">${QZ_BG}<div class="gf-top"><div class="gf-title"><div><b class="qz-t-l">${esc(full)}</b><b class="qz-t-s">${esc(short)}</b><small class="qz-t-s">${esc(QZ.dt)}</small></div></div><button class="gf-exit" data-act="qquit" title="Thoát quiz (Esc)"><span class="qx-t">Thoát</span><span class="qx-i">${ic("close", 17)}</span></button></div><div class="gf-body"><div class="qz-shell">${inner}</div></div></div>`;
 }
 function pageQuiz() {
   const d = DAYS[S.sel - 1], best = S.days[d.day] && S.days[d.day].quiz;
-  const head = (sub) => `<div class="section-heading centered"><div><span class="eyebrow">${quizSrc === "vault" ? "Kho của tôi" : quizSrc === "due" ? "Ôn tập đến hạn" : `Kiểm tra cuối bài · Day ${pad(S.sel)}`}</span><h2>Quiz từ vựng</h2><p>${sub}</p></div></div><div class="toolbar" style="justify-content:center"><label>Nguồn <select data-change="qsrc"><option value="day" ${quizSrc === "day" ? "selected" : ""}>Theo ngày</option><option value="due" ${quizSrc === "due" ? "selected" : ""}>Ôn tập đến hạn (${dueDays().length})</option><option value="vault" ${quizSrc === "vault" ? "selected" : ""}>Kho của tôi (${S.vault.length})</option></select></label>${quizSrc === "day" ? daySelect() : ""}</div>`;
+  const head = (sub) => `<div class="section-heading centered"><div><span class="eyebrow">${quizSrc === "vault" ? "Kho của tôi" : quizSrc === "due" ? "Ôn tập đến hạn" : `Kiểm tra cuối bài · Day ${pad(S.sel)}`}</span><h2>Quiz từ vựng</h2><p>${sub}</p><p class="qz-start-hint">Chọn đáp án đúng nhất · phím tắt 1–4 để chọn, Enter để tiếp tục</p></div></div><div class="toolbar" style="justify-content:center"><label>Nguồn <select data-change="qsrc"><option value="day" ${quizSrc === "day" ? "selected" : ""}>Theo ngày</option><option value="due" ${quizSrc === "due" ? "selected" : ""}>Ôn tập đến hạn (${dueDays().length})</option><option value="vault" ${quizSrc === "vault" ? "selected" : ""}>Kho của tôi (${S.vault.length})</option></select></label>${quizSrc === "day" ? daySelect() : ""}</div>`;
   if (!QZ && quizSrc === "due") { const n = dueDays().length + (dueDays().length ? 0 : S.vault.filter(w => wstatus(w.word) === "due").length); return `<div class="page center-page quiz-page">${head("Quiz tạo từ bài đã đến hạn ôn tập")}<div class="result-card"><span class="eyebrow">Ôn tập ngắt quãng</span><h2>${n ? (dueDays().length ? `${dueDays().length} bài đến hạn hôm nay` : `${n} từ trong kho đến hạn`) : "Hôm nay không có bài nào đến hạn"}</h2><p>${n ? "Quiz 10 câu của bài đến hạn sớm nhất. Đạt từ 80% thì bài lên mốc ôn tiếp theo (3 → 7 → 14 → 30 ngày), chưa đạt thì ôn lại vào ngày mai." : "Hoàn thành quiz một ngày học để bắt đầu lịch ôn; xem lịch ở Dashboard."}</p>${n ? `<div class="row"><button class="primary" data-act="qstart">Bắt đầu ${ic("arrow", 16)}</button></div>` : ""}</div></div>`; }
   if (!QZ && quizSrc === "vault") return `<div class="page center-page quiz-page">${head("Câu hỏi tạo từ các từ bạn đã thêm vào kho")}<div class="result-card"><span class="eyebrow">Kho từ vựng cá nhân</span><h2>${S.vault.length} từ trong kho</h2><p>${S.vault.length ? "Tối đa 10 câu mỗi lượt: nghĩa – từ, điền chỗ trống (nếu từ có câu ví dụ) và đồng nghĩa." : "Kho đang trống. Vào Bài đọc, bấm vào một từ bất kỳ rồi chọn “Thêm vào kho”."}</p>${S.vault.length ? `<div class="row"><button class="primary" data-act="qstart">Bắt đầu ${ic("arrow", 16)}</button></div>` : ""}</div></div>`;
   if (!QZ) return `<div class="page center-page quiz-page">${head("10 câu hỏi · đạt từ 90% để hoàn thành ngày học (+100 XP) và bắt đầu lịch ôn 3 → 7 → 14 → 30 ngày")}<div class="result-card"><span class="eyebrow">${esc(d.topic)}</span><h2>${esc(d.title)}</h2>${dayDone(d.day) ? `<p><b>Day ${pad(d.day)} đã hoàn thành ✓</b> · điểm cao nhất <b>${best}%</b><br>Bạn muốn làm lại? Làm lại được tính là lượt ôn tập và chỉ nhận <b>+15 XP</b>.</p><div class="row"><button class="primary" data-act="qstart">Làm lại ${ic("arrow", 16)}</button></div>` : `<p>Câu hỏi được tạo từ 10 từ của bài: nghĩa – từ, điền chỗ trống, đồng nghĩa.<br>${best != null ? `Điểm cao nhất của bạn: <b>${best}%</b>` : "Bạn chưa làm quiz bài này."}</p><div class="row"><button class="primary" data-act="qstart">Bắt đầu ${ic("arrow", 16)}</button></div>`}</div></div>`;
@@ -2327,11 +2387,11 @@ function pageQuiz() {
       <div class="row">${QZ.due ? (dueDays().length ? `<button class="primary" data-act="dayreview" data-d="${dueDays()[0].day}">Ôn tiếp Day ${pad(dueDays()[0].day)} ${ic("arrow", 16)}</button>` : `<button class="primary" data-act="nav" data-p="Dashboard">Về Dashboard</button>`) : `<button class="ghost" data-act="qstart">Làm lại</button>`}<button class="ghost" data-act="goflash">Ôn flashcard</button>${!QZ.vault && !QZ.due && QZ.day < 30 ? `<button class="primary" data-act="nextday">Ngày tiếp theo ${ic("arrow", 16)}</button>` : ""}</div></div>`);
   }
   const c = QZ.qs[QZ.i], n = QZ.qs.length, p = QZ.picked, w = c.w;
-  return qFullHTML(`<div class="quiz-progress"><div><span>Câu ${QZ.i + 1} / ${n}</span><b>${Math.round((QZ.i + (p !== null ? 1 : 0)) / n * 100)}%</b></div><i><b style="width:${(QZ.i + (p !== null ? 1 : 0)) / n * 100}%"></b></i></div>
+  return qFullHTML(`<div class="qz-prog"><div class="qz-plabel">Câu ${QZ.i + 1} / ${n}</div><div class="qz-track"><i style="width:${(QZ.i + (p !== null ? 1 : 0)) / n * 100}%"></i>${QZ_DOTS}<span class="qz-camel-w" style="left:${(QZ.i + (p !== null ? 1 : 0)) / n * 100}%">${QZ_CAMEL}</span></div></div>
   <article class="quiz-card"><span class="question-number">Câu hỏi ${QZ.i + 1}</span><h2>${esc(c.q)}</h2>${c.sub ? `<div class="sentence">${c.sub}</div>` : ""}
   <div class="answers">${c.opts.map((o, i) => `<button data-act="qpick" data-i="${i}" ${p !== null ? "disabled" : ""} class="${p === null ? "" : i === c.correct ? "correct" : i === p ? "wrong" : ""}"><span>${String.fromCharCode(65 + i)}</span>${esc(o)}${p !== null && i === c.correct ? ic("check") : p === i ? ic("close") : ""}</button>`).join("")}</div>
   ${p !== null ? `<div class="explanation ${p === c.correct ? "ok" : "no"}">${ic(p === c.correct ? "check" : "close")}<div><b>${p === c.correct ? "Chính xác!" : "Chưa chính xác"}</b><p><strong>${esc(w.word)}</strong> ${esc(w.phonetic)} - ${esc(w.vi)}</p>${w.example ? `<p><i>${exBold(w.example)}</i></p>` : ""}</div></div>` : ""}
-  <div class="quiz-footer"><span class="qz-hint">Phím tắt 1–4 để chọn · Enter để tiếp tục</span><button class="primary" data-act="qnext" ${p === null ? "disabled" : ""}>${QZ.i === n - 1 ? "Xem kết quả" : "Câu tiếp theo"} ${ic("arrow")}</button></div></article>`);
+  <div class="quiz-footer"><span></span><button class="primary" data-act="qnext" ${p === null ? "disabled" : ""}>${QZ.i === n - 1 ? "Xem kết quả" : "Câu tiếp theo"} ${ic("arrow")}</button></div></article>`);
 }
 function finishQuiz() {
   QZ.done = true; const n = QZ.qs.length, pct = Math.round(QZ.score / n * 100);
