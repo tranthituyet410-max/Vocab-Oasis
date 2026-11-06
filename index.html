@@ -792,8 +792,8 @@ body.gfull .toast{z-index:260;bottom:calc(26px + env(safe-area-inset-bottom))}
   .qz-shell .quiz-footer .primary{width:100%;justify-content:center}
 }
 /* ===== Quiz: kích thước theo đúng bản mock 1440x900 (1u = 1px của mock, co theo cả chiều rộng lẫn chiều cao màn hình) ===== */
-.qz-full{--u:min(calc(100vw / 1440),calc((100vh - 102px) / 830))}
-.qz-shell:has(.qz-prog){width:calc(var(--u)*1020);max-width:94vw;margin:auto;padding:calc(var(--u)*34) calc(var(--u)*52) calc(var(--u)*34);border:1px solid #F2D6A2;border-radius:calc(var(--u)*32);box-shadow:0 calc(var(--u)*24) calc(var(--u)*70) rgba(120,53,15,.18);background:transparent}
+.qz-full{--u:calc(min(calc(100vw / 1440),calc((100vh - 102px) / 798)) * .85)}
+.qz-shell:has(.qz-prog){width:calc(var(--u)*1164);max-width:94vw;margin:calc(var(--u)*36) auto auto;padding:calc(var(--u)*38) calc(var(--u)*52) calc(var(--u)*40);border:1px solid #F2D6A2;border-radius:calc(var(--u)*32);box-shadow:0 calc(var(--u)*24) calc(var(--u)*70) rgba(120,53,15,.18);background:transparent}
 .qz-shell:has(.qz-prog) .qz-prog{display:flex;align-items:center;gap:calc(var(--u)*18);margin:0;padding-top:calc(var(--u)*26)}
 .qz-shell:has(.qz-prog) .qz-track{order:1;flex:1;margin:0;height:calc(var(--u)*14);border-radius:calc(var(--u)*7);background:rgba(255,255,255,.55)}
 .qz-shell:has(.qz-prog) .qz-track em{top:calc(var(--u)*5);width:calc(var(--u)*4);height:calc(var(--u)*4)}
