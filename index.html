@@ -791,6 +791,46 @@ body.gfull .toast{z-index:260;bottom:calc(26px + env(safe-area-inset-bottom))}
   .qz-shell .answers{grid-template-columns:1fr}
   .qz-shell .quiz-footer .primary{width:100%;justify-content:center}
 }
+/* ===== Quiz: kích thước theo đúng bản mock 1440x900 (1u = 1px của mock, co theo cả chiều rộng lẫn chiều cao màn hình) ===== */
+.qz-full{--u:min(calc(100vw / 1440),calc((100vh - 102px) / 830))}
+.qz-shell:has(.qz-prog){width:calc(var(--u)*1020);max-width:94vw;margin:auto;padding:calc(var(--u)*34) calc(var(--u)*52) calc(var(--u)*34);border:1px solid #F2D6A2;border-radius:calc(var(--u)*32);box-shadow:0 calc(var(--u)*24) calc(var(--u)*70) rgba(120,53,15,.18);background:transparent}
+.qz-shell:has(.qz-prog) .qz-prog{display:flex;align-items:center;gap:calc(var(--u)*18);margin:0;padding-top:calc(var(--u)*26)}
+.qz-shell:has(.qz-prog) .qz-track{order:1;flex:1;margin:0;height:calc(var(--u)*14);border-radius:calc(var(--u)*7);background:rgba(255,255,255,.55)}
+.qz-shell:has(.qz-prog) .qz-track em{top:calc(var(--u)*5);width:calc(var(--u)*4);height:calc(var(--u)*4)}
+.qz-shell:has(.qz-prog) .qz-plabel{order:2;font-size:max(14px,calc(var(--u)*20));font-weight:900;line-height:1;white-space:nowrap}
+.qz-shell:has(.qz-prog) .qz-camel{width:calc(var(--u)*44);height:calc(var(--u)*34)}
+.qz-shell .quiz-card{padding:0}
+.qz-shell .question-number{display:block;margin-top:calc(var(--u)*24);font-size:max(12px,calc(var(--u)*16));letter-spacing:.14em;color:#92400E}
+.qz-shell .quiz-card>h2{font-size:max(22px,calc(var(--u)*42));line-height:1.25;font-weight:900;margin:calc(var(--u)*8) 0 calc(var(--u)*24)}
+.qz-shell .sentence{font-size:max(15px,calc(var(--u)*22));padding:calc(var(--u)*14) calc(var(--u)*18);margin:calc(var(--u)*-8) 0 calc(var(--u)*20)}
+.qz-shell .answers{gap:calc(var(--u)*20)}
+.qz-shell .answers button{display:flex;align-items:center;gap:calc(var(--u)*20);min-height:max(56px,calc(var(--u)*104));padding:0 calc(var(--u)*26);border-width:2px;border-radius:calc(var(--u)*22);font-size:max(15px,calc(var(--u)*28));font-weight:800;text-align:left;background:rgba(255,251,235,.72)}
+.qz-shell .answers button>span{display:grid;place-items:center;flex:none;width:max(32px,calc(var(--u)*52));height:max(32px,calc(var(--u)*52));border-radius:calc(var(--u)*14);font-size:max(14px,calc(var(--u)*24));font-weight:900;color:#92400E}
+.qz-shell .answers button svg{margin-left:auto;flex:none}
+.qz-shell .explanation{gap:calc(var(--u)*14);margin-top:calc(var(--u)*16);padding:calc(var(--u)*12) calc(var(--u)*18);border-radius:calc(var(--u)*16)}
+.qz-shell .explanation svg{flex:none;width:max(18px,calc(var(--u)*24));height:max(18px,calc(var(--u)*24))}
+.qz-shell .explanation b{font-size:max(15px,calc(var(--u)*22));font-weight:900}
+.qz-shell .explanation p{font-size:max(14px,calc(var(--u)*19));line-height:1.35;margin:calc(var(--u)*3) 0!important}
+.qz-shell .quiz-footer{margin-top:calc(var(--u)*20)}
+.qz-shell .quiz-footer .primary{height:max(44px,calc(var(--u)*64));padding:0 calc(var(--u)*34);border-radius:calc(var(--u)*18);font-size:max(14px,calc(var(--u)*22));font-weight:900}
+@media (max-width:760px){
+  .qz-shell:has(.qz-prog){width:100%;max-width:none;margin:8px auto auto;padding:14px 14px 18px;border-radius:24px}
+  .qz-shell:has(.qz-prog) .qz-prog{padding-top:26px;gap:12px}
+  .qz-shell:has(.qz-prog) .qz-track{height:10px;border-radius:5px}
+  .qz-shell:has(.qz-prog) .qz-camel{width:34px;height:26px}
+  .qz-shell:has(.qz-prog) .qz-plabel{font-size:14px}
+  .qz-shell .question-number{margin-top:20px;font-size:12px}
+  .qz-shell .quiz-card>h2{font-size:22px;margin:8px 0 18px}
+  .qz-shell .sentence{font-size:16px;padding:12px 14px;margin:-4px 0 16px}
+  .qz-shell .answers{gap:10px}
+  .qz-shell .answers button{min-height:60px;padding:0 14px;gap:12px;font-size:17px;border-radius:16px}
+  .qz-shell .answers button>span{width:34px;height:34px;font-size:15px;border-radius:10px}
+  .qz-shell .explanation{gap:10px;padding:12px 14px;border-radius:14px}
+  .qz-shell .explanation b{font-size:15.5px}
+  .qz-shell .explanation p{font-size:14.5px}
+  .qz-shell .quiz-footer{margin-top:16px}
+  .qz-shell .quiz-footer .primary{width:100%;justify-content:center;height:50px;font-size:16px;border-radius:14px}
+}
 @keyframes gfin{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
 .gf-top{flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(12px + env(safe-area-inset-top)) 22px 12px;background:rgba(255,253,245,.9);border-bottom:1px solid var(--border)}
 .gf-title{display:flex;align-items:center;gap:11px;min-width:0}
