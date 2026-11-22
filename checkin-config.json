@@ -6,7 +6,7 @@
       "type": "doc",
       "icon": "scroll",
       "title": "Bài đọc Urban life",
-      "desc": "Kèm từ vựng",
+      "desc": "Kèm từ vựng và bài tập",
       "files": [
         {
           "name": "Bài đọc Urban life (PDF)",
@@ -19,7 +19,7 @@
       "type": "doc",
       "icon": "scroll",
       "title": "Bài đọc Technology",
-      "desc": "Kèm từ vựng",
+      "desc": "Kèm từ vựng và bài tập",
       "files": [
         {
           "name": "Bài đọc Technology (PDF)",
@@ -32,7 +32,7 @@
       "type": "doc",
       "icon": "scroll",
       "title": "Bài đọc Economy & Society",
-      "desc": "Kèm từ vựng",
+      "desc": "Kèm từ vựng và bài tập",
       "files": [
         {
           "name": "Bài đọc Economy & Society (PDF)",
@@ -45,7 +45,7 @@
       "type": "doc",
       "icon": "scroll",
       "title": "Bài đọc Energy Transition & Low-Carbon Economy",
-      "desc": "Kèm từ vựng",
+      "desc": "Kèm từ vựng và bài tập",
       "files": [
         {
           "name": "Bài đọc Energy Transition & Low-Carbon Economy (PDF)",
@@ -58,7 +58,7 @@
       "type": "doc",
       "icon": "scroll",
       "title": "Bài đọc Climate change",
-      "desc": "Kèm từ vựng",
+      "desc": "Kèm từ vựng và bài tập",
       "files": [
         {
           "name": "Bài đọc Climate change (PDF)",
@@ -71,7 +71,7 @@
       "type": "doc",
       "icon": "scroll",
       "title": "Bài đọc Education",
-      "desc": "Kèm từ vựng",
+      "desc": "Kèm từ vựng và bài tập",
       "files": [
         {
           "name": "Bài đọc Education (PDF)",
@@ -84,7 +84,7 @@
       "type": "doc",
       "icon": "chest",
       "title": "Reading Pack",
-      "desc": "100 bài đọc + từ vựng",
+      "desc": "30 Bài đọc gốc và từ vựng",
       "files": [
         {
           "name": "Reading Pack – 100 bài đọc (PDF)",
