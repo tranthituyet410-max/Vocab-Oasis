@@ -1,0 +1,97 @@
+{
+  "season": "season-1",
+  "enabled": true,
+  "rewards": [
+    {
+      "type": "doc",
+      "icon": "scroll",
+      "title": "Bài đọc Urban life",
+      "desc": "Kèm từ vựng",
+      "files": [
+        {
+          "name": "Bài đọc Urban life (PDF)",
+          "url": "https://drive.google.com/uc?export=download&id=10lYfe0CNMgi1QrUGEuF4bPNeQcQefmzP",
+          "preview": "https://drive.google.com/file/d/10lYfe0CNMgi1QrUGEuF4bPNeQcQefmzP/preview"
+        }
+      ]
+    },
+    {
+      "type": "doc",
+      "icon": "scroll",
+      "title": "Bài đọc Technology",
+      "desc": "Kèm từ vựng",
+      "files": [
+        {
+          "name": "Bài đọc Technology (PDF)",
+          "url": "https://drive.google.com/uc?export=download&id=1AhONHgW7X9zKvejT8aNQgQ2crtx2MRWQ",
+          "preview": "https://drive.google.com/file/d/1AhONHgW7X9zKvejT8aNQgQ2crtx2MRWQ/preview"
+        }
+      ]
+    },
+    {
+      "type": "doc",
+      "icon": "scroll",
+      "title": "Bài đọc Economy & Society",
+      "desc": "Kèm từ vựng",
+      "files": [
+        {
+          "name": "Bài đọc Economy & Society (PDF)",
+          "url": "https://drive.google.com/uc?export=download&id=1J2PvZVKMjGF53k_vAyhDTMIE99cRQgQv",
+          "preview": "https://drive.google.com/file/d/1J2PvZVKMjGF53k_vAyhDTMIE99cRQgQv/preview"
+        }
+      ]
+    },
+    {
+      "type": "doc",
+      "icon": "scroll",
+      "title": "Bài đọc Energy Transition & Low-Carbon Economy",
+      "desc": "Kèm từ vựng",
+      "files": [
+        {
+          "name": "Bài đọc Energy Transition & Low-Carbon Economy (PDF)",
+          "url": "https://drive.google.com/uc?export=download&id=1Ka6QrJ0uLp5u0IatKkqWRtFaxz9EdGfs",
+          "preview": "https://drive.google.com/file/d/1Ka6QrJ0uLp5u0IatKkqWRtFaxz9EdGfs/preview"
+        }
+      ]
+    },
+    {
+      "type": "doc",
+      "icon": "scroll",
+      "title": "Bài đọc Climate change",
+      "desc": "Kèm từ vựng",
+      "files": [
+        {
+          "name": "Bài đọc Climate change (PDF)",
+          "url": "https://drive.google.com/uc?export=download&id=1C-2PIPmMSgjD7bYkRSZvxBR1rx2DhFfB",
+          "preview": "https://drive.google.com/file/d/1C-2PIPmMSgjD7bYkRSZvxBR1rx2DhFfB/preview"
+        }
+      ]
+    },
+    {
+      "type": "doc",
+      "icon": "scroll",
+      "title": "Bài đọc Education",
+      "desc": "Kèm từ vựng",
+      "files": [
+        {
+          "name": "Bài đọc Education (PDF)",
+          "url": "https://drive.google.com/uc?export=download&id=1KTMvXetF4d2u94Cw5EQhePFTVba6EqaG",
+          "preview": "https://drive.google.com/file/d/1KTMvXetF4d2u94Cw5EQhePFTVba6EqaG/preview"
+        }
+      ]
+    },
+    {
+      "type": "doc",
+      "icon": "chest",
+      "title": "Reading Pack",
+      "desc": "100 bài đọc + từ vựng",
+      "files": [
+        {
+          "name": "Reading Pack – 100 bài đọc (PDF)",
+          "url": "https://drive.google.com/uc?export=download&id=1uYeAGpgMCdiNoLO49bVSCnPsIC0uYVK-",
+          "preview": "https://drive.google.com/file/d/1uYeAGpgMCdiNoLO49bVSCnPsIC0uYVK-/preview"
+        }
+      ]
+    }
+  ]
+}
